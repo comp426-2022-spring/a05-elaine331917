@@ -45,24 +45,6 @@ const server = app.listen(port, () => {
     console.log('App listening on port %PORT%'.replace('%PORT%', port))
 })
 
-// logging middleware
-app.use((req, res, next)=>{
-    let logdata = {
-        remoteaddr: req.ip,
-        remoteuser: req.user,
-        time: Date.now(),
-        method: req.method,
-        url: req.url,
-        protocol: req.protocol,
-        httpversion: req.httpVersion,
-        status: res.statusCode,
-        referer: req.headers['referer'],
-        useragent: req.headers['user-agent'],
-    }
-    const stmt = db.prepare('INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
-    stmt.run(logdata.remoteaddr, logdata.remoteuser, logdata.time, logdata.method, logdata.url, logdata.protocol, logdata.httpversion, logdata.status, logdata.referer, logdata.useragent)
-    next()
-  })
 
 // API endpoints
 app.get('/app/', (req, res) => {
@@ -71,6 +53,9 @@ app.get('/app/', (req, res) => {
     res.writeHead(res.statusCode, { 'Content-Type' : 'text/plain' })
     res.end(res.statusCode + ' ' + res.statusMessage)
 })
+
+// logging middleware
+app.use(require('./src/middleware/mymiddleware.js'))
 
 // log and error testing
 if (args.debug == true) {
