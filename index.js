@@ -60,14 +60,7 @@ app.use(require('./src/middleware/mymiddleware.js'))
 // log and error testing
 if (args.debug == true) {
     // create endpoint /app/log/access that returns accesslog
-    app.get('/app/log/access', (req, res) => {
-        const stmt = db.prepare('SELECT * FROM accesslog').all()
-        res.status(200).json(stmt)
-    });
-
-    app.get('/app/error', (req, res) => {
-        throw new Error('Error test successful.')
-    });
+    app.use(require('./src/routes/debug'))
 }
 
 // log == true
@@ -75,26 +68,6 @@ if (args.log == true) {
     const logstream = fs.createWriteStream('./access.log', { flags: 'a' })
     app.use(morgan('combined', { stream: logstream }))
 }
-
-app.get('/app/flip', (req, res) => {
-    res.status(200).json({ 'flip': coin.coinFlip() })
-})
-
-app.get('/app/flips/:number', (req, res) => {
-    const flips = coin.coinFlips(req.params.number)
-    const sum = coin.countFlips(flips)
-    res.status(200).json({ 'raw': flips, 'summary': sum })
-})
-
-app.get('/app/flip/call/heads', (req, res) => {
-    const guess = coin.flipACoin('heads')
-    res.status(200).json({ 'call': guess.call, 'flip': guess.flip, 'result': guess.result })
-})
-
-app.get('/app/flip/call/tails', (req, res) => {
-    const guess = coin.flipACoin('tails')
-    res.status(200).json({ 'call': guess.call, 'flip': guess.flip, 'result': guess.result })
-})
 
 app.use(function(req, res){
 	res.json({"message": "Endpoint not found. (404)"});
