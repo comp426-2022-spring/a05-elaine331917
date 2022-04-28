@@ -1,6 +1,5 @@
 // Place your server entry point code here
 
-
 const express = require('express')
 const app = express()
 const args = require('minimist')(process.argv.slice(2))
