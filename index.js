@@ -5,8 +5,6 @@ const app = express()
 const args = require('minimist')(process.argv.slice(2))
 const fs = require('fs')
 const morgan = require('morgan')
-const db = require('./database.js')
-const coin = require('./coin.js')
 
 // Serve static HTML files
 app.use(express.static('./public'));
