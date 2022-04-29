@@ -1,7 +1,11 @@
 // Focus div based on nav button click
 function focusDiv(div) {
-
-}
+    var actives = Array.from(document.getElementsByClassName('active'))
+    actives.forEach(function (curr) {
+        curr.setAttribute('class','hidden')
+    })
+    document.getElementById(div).setAttribute('class', 'active')
+}   
 // Flip one coin and show coin image to match result when button clicked
 function flipCoin() {
 
@@ -14,5 +18,5 @@ function flipCoins() {
 }
 // Guess a flip by clicking either heads or tails button
 function guessCoin(guess) {
-    
+
 }
