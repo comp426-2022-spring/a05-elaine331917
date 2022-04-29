@@ -42,15 +42,6 @@ const server = app.listen(port, () => {
     console.log('App listening on port %PORT%'.replace('%PORT%', port))
 })
 
-
-// API endpoints
-app.get('/app/', (req, res) => {
-    res.statusCode = 200
-    res.statusMessage = 'OK'
-    res.writeHead(res.statusCode, { 'Content-Type' : 'text/plain' })
-    res.end(res.statusCode + ' ' + res.statusMessage)
-})
-
 // logging middleware
 app.use(require('./src/middleware/mymiddleware.js'))
 
@@ -60,11 +51,21 @@ if (args.debug == true) {
     app.use(require('./src/routes/debug'))
 }
 
+// API endpoints
+app.get('/app/', (req, res) => {
+    res.status(200).json({
+        'message': `Your API works! (${200})`
+    })
+})
+
 // log == true
 if (args.log == true) {
     const logstream = fs.createWriteStream('./access.log', { flags: 'a' })
     app.use(morgan('combined', { stream: logstream }))
 }
+
+// coin flip route
+app.use(require('./src/routes/coin'))
 
 app.use(function(req, res){
 	res.json({"message": "Endpoint not found. (404)"});
